@@ -1,5 +1,6 @@
 package br.com.washington.coupon.dto.response;
 
+import br.com.washington.coupon.model.Coupon;
 import br.com.washington.coupon.model.Status;
 
 import java.math.BigDecimal;
@@ -7,13 +8,25 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 public record CouponResponse(
-    UUID id,
-    String code,
-    String description,
-    BigDecimal discountValue,
-    LocalDateTime expirationDate,
-    Status status,
-    Boolean published,
-    Boolean redeemed
+        UUID id,
+        String code,
+        String description,
+        BigDecimal discountValue,
+        LocalDateTime expirationDate,
+        Status status,
+        Boolean published,
+        Boolean redeemed
 ) {
+    public static CouponResponse fromModel(Coupon coupon) {
+        return new CouponResponse(
+                coupon.getId(),
+                coupon.getCode().value(),
+                coupon.getDescription(),
+                coupon.getDiscountValue(),
+                coupon.getExpirationDate(),
+                coupon.getStatus(),
+                coupon.isPublished(),
+                coupon.isRedeemed()
+        );
+    }
 }

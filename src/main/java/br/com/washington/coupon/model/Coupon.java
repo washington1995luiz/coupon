@@ -18,7 +18,7 @@ public class Coupon {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Embedded @Column(name = "code", nullable = false, unique = true)
+    @Embedded
     private CouponCode code;
 
     @Column(name = "description", nullable = false)
@@ -39,31 +39,32 @@ public class Coupon {
     @Column(name = "redeemed", nullable = false)
     private boolean redeemed;
 
-    @Column(updatable = false, nullable = false, name = "created_at")
+    @Column(name = "created_at", updatable = false, nullable = false)
     private LocalDateTime createdAt;
 
-    @Column(updatable = false, nullable = false, name = "updated_at")
+    @Column(name = "updated_at", updatable = false, nullable = false)
     private LocalDateTime updatedAt;
 
     @Column(name = "deleted_at", nullable = true)
     private LocalDateTime deletedAt;
 
-
-    public Coupon create(String code, String description, BigDecimal discountValue, LocalDateTime expirationDate, Boolean published) {
+    public static Coupon create(String code, String description, BigDecimal discountValue, LocalDateTime expirationDate, Boolean published) {
         var now = LocalDateTime.now();
-        this.code = new CouponCode(code);
-        this.description = description;
-        this.discountValue = discountValue;
-        this.expirationDate = expirationDate;
-        this.status = Status.ACTIVE;
-        this.published = published != null && published;
-        this.redeemed = false;
-        this.createdAt = now;
-        this.updatedAt = now;
-        return this;
+
+        Coupon coupon = new Coupon();
+        coupon.code = new CouponCode(code);
+        coupon.description = description;
+        coupon.discountValue = discountValue;
+        coupon.expirationDate = expirationDate;
+        coupon.status = Status.ACTIVE;
+        coupon.published = published != null && published;
+        coupon.redeemed = false;
+        coupon.createdAt = now;
+        coupon.updatedAt = now;
+        return coupon;
     }
 
-    public void softDelete(){
+    public void softDelete() {
         if (this.status == Status.DELETED) {
             throw new CouponAlreadyDeletedException("Coupon is already deleted");
         }

@@ -1,11 +1,12 @@
 package br.com.washington.coupon.model;
 
 import br.com.washington.coupon.exception.CouponCodeException;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import org.springframework.util.ObjectUtils;
 
 @Embeddable
-public record CouponCode(String value) {
+public record CouponCode(@Column(name = "code", nullable = false, unique = true) String value) {
     public CouponCode {
         if (ObjectUtils.isEmpty(value)) {
             throw new CouponCodeException("Coupon code cannot be null or blank");

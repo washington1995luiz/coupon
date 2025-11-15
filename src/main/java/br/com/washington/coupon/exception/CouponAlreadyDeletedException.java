@@ -3,13 +3,9 @@ package br.com.washington.coupon.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-public class CouponAlreadyDeletedException extends ResponseStatusException {
+public class CouponAlreadyDeletedException extends RuntimeException {
     public CouponAlreadyDeletedException(String text) {
-        super(HttpStatus.CONFLICT, text);
+        super(text);
     }
 
-    @Override
-    public synchronized Throwable fillInStackTrace() {
-        return this;
-    }
 }

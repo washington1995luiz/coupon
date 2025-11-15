@@ -1,15 +1,12 @@
 package br.com.washington.coupon.service.impl;
 
 import br.com.washington.coupon.dto.request.CouponCreateRequest;
-import br.com.washington.coupon.event.dto.CouponAlreadyDeletedEvent;
 import br.com.washington.coupon.event.dto.CouponAlreadyExistsEvent;
 import br.com.washington.coupon.event.dto.CouponCreatedEvent;
 import br.com.washington.coupon.event.dto.CouponDeletedEvent;
-import br.com.washington.coupon.exception.CouponAlreadyDeletedException;
 import br.com.washington.coupon.exception.CouponAlreadyExistsException;
 import br.com.washington.coupon.exception.CouponIdNotFoundException;
 import br.com.washington.coupon.model.Coupon;
-import br.com.washington.coupon.model.Status;
 import br.com.washington.coupon.repository.CouponRepository;
 import br.com.washington.coupon.service.CouponService;
 import lombok.RequiredArgsConstructor;
@@ -38,14 +35,13 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     public Coupon findById(UUID id) {
-        return couponRepository.findById(id).orElseThrow(() -> new CouponIdNotFoundException("Coupon not found for this ID"));
+        return couponRepository.findByIdAndDeletedAtIsNull(id).orElseThrow(() -> new CouponIdNotFoundException("Coupon not found for this ID"));
     }
 
     @Transactional
     @Override
     public void delete(UUID id) {
         Coupon coupon = findById(id);
-        verifyIfCouponIsAlreadyDeleted(coupon);
 
         coupon.softDelete();
         couponRepository.save(coupon);
@@ -53,12 +49,6 @@ public class CouponServiceImpl implements CouponService {
         eventPublisher.publishEvent(new CouponDeletedEvent(coupon.getId(), coupon.getCode().value()));
     }
 
-    private void verifyIfCouponIsAlreadyDeleted(Coupon coupon) {
-        if(coupon.getStatus() == Status.DELETED) {
-            eventPublisher.publishEvent(new CouponAlreadyDeletedEvent(coupon.getId(), coupon.getCode().value()));
-            throw new CouponAlreadyDeletedException("Coupon is already deleted");
-        }
-    }
 
     private boolean couponExists(String code) {
         return couponRepository.existsByCode_value(code);

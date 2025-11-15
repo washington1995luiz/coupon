@@ -5,8 +5,4 @@ public class CouponAlreadyExistsException extends RuntimeException {
         super(msg);
     }
 
-    @Override
-    public synchronized Throwable fillInStackTrace() {
-        return this;
-    }
 }

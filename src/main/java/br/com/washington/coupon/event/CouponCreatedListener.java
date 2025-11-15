@@ -11,13 +11,13 @@ import org.springframework.stereotype.Component;
 public class CouponCreatedListener {
 
     @EventListener
-    public void createdSuccessHandler(CouponCreatedEvent event) {
+    public void onCreatedHandler(CouponCreatedEvent event) {
         log.info("event=coupon_created id={} code={}", event.id(), event.code());
     }
 
 
     @EventListener
-    public void couponAlreadyExistsHandler(CouponAlreadyExistsEvent event) {
+    public void onAlreadyExistsHandler(CouponAlreadyExistsEvent event) {
         log.info("event=coupon_already_exists code={}", event.code());
     }
 }

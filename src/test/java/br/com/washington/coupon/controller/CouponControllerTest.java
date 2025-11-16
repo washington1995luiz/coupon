@@ -1,9 +1,6 @@
 package br.com.washington.coupon.controller;
 
-import br.com.washington.coupon.exception.CodeLengthException;
-import br.com.washington.coupon.exception.CouponAlreadyExistsException;
-import br.com.washington.coupon.exception.CouponIdNotFoundException;
-import br.com.washington.coupon.exception.DiscountValueException;
+import br.com.washington.coupon.exception.*;
 import br.com.washington.coupon.mock.CouponCreateRequestMock;
 import br.com.washington.coupon.model.Coupon;
 import br.com.washington.coupon.service.CouponService;
@@ -159,6 +156,16 @@ public class CouponControllerTest {
         var id = "123456";
         mockMvc.perform(get("/coupon/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void shouldThrowException_whenPassExpirationDateInPast() throws Exception {
+        var request = CouponCreateRequestMock.buildBadValuesExpirationDate();
+        when(couponService.create(any())).thenThrow(new ExpirationDateException("Expiration date must be in the future"));
+        mockMvc.perform(post("/coupon")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
     }
 

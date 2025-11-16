@@ -61,4 +61,13 @@ public class CouponCreateRequestMock {
                 true);
     }
 
+    public static CouponCreateRequest buildBadValuesExpirationDate() {
+        return new CouponCreateRequest(
+                "CODE10",
+                "DESCRIPTION",
+                new BigDecimal("0.5"),
+                LocalDateTime.parse("2010-10-01T10:00:00"),
+                true);
+    }
+
 }

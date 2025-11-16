@@ -114,12 +114,12 @@ Imagens: https://hub.docker.com/r/washington1995luiz/coupon
 
 Baixar imagem:
 ```bash
-docker pull washington1995luiz/coupon:590c
+docker pull washington1995luiz/coupon:da46
 ```
 
 Rodar container:
 ```bash
-docker run --rm -p 8080:8080 washington1995luiz/coupon:590c
+docker run --rm -p 8080:8080 washington1995luiz/coupon:da46
 ```
 
 Após subir:

@@ -24,6 +24,17 @@ jobs:
           distribution: 'temurin'
           java-version: '25'
 
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-m2-
+
+      - name: Test application
+        run: mvn clean test
+
       - name: Set Git Config
         run: |
           git config --global user.email "$(git --no-pager show -s --format='%ae')"

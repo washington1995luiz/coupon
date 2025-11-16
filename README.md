@@ -4,16 +4,16 @@ API de gestão de cupons construída com Spring Boot 3, validação via Bean Val
 
 ## Visão Geral
 - Camadas: `controller` → `service` → `repository`
-- DTOs: `CouponCreateRequest` (entrada), `CouponResponse` (saída)
-- VO: `CouponCode` valida e normaliza o código do cupom (6 caracteres alfanuméricos)
-- Tratamento de erros: `ProblemDetail` com mapeamento global de exceções
-- Eventos: publicação em criação e deleção de cupons
-- Banco: H2 em memória com console em `/h2-console`
+  - DTOs: `CouponCreateRequest` (entrada), `CouponResponse` (saída)
+  - VO: `CouponCode` valida e normaliza o código do cupom (6 caracteres alfanuméricos)
+  - Tratamento de erros: `ProblemDetail` com mapeamento global de exceções
+  - Eventos: publicação em criação e deleção de cupons
+  - Banco: H2 em memória com console em `/h2-console`
 
 ## Requisitos
 - Java 25
-- Maven 
-- Porta `8080` livre
+  - Maven 
+  - Porta `8080` livre
 
 ## Executar Localmente (Maven)
 ```bash
@@ -42,7 +42,7 @@ A aplicação sobe em `http://localhost:8080`. Console H2: `http://localhost:808
 ```
 
 - GET `/coupon/{id}` — busca por ID
-- DELETE `/coupon/{id}` — remoção (soft delete)
+  - DELETE `/coupon/{id}` — remoção (soft delete)
 
 Resposta (exemplo):
 ```json
@@ -58,11 +58,36 @@ Resposta (exemplo):
 }
 ```
 
+## Exemplo com curl
+
+- POST Create
+```bash
+curl --location 'http://localhost:8080/coupon' \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "code": "A2D231",
+    "description": "Black Friday Discount",
+    "discountValue": 0.5,
+    "expirationDate": "2025-12-01T10:00:00",
+    "published": true
+  }'
+```
+
+- GET findById
+```bash
+curl --location 'http://localhost:8080/coupon/a49bbc62-2084-4ea3-9ec0-2965465b2415'
+```
+
+- DELETE soft delete
+```bash
+curl --location --request DELETE 'http://localhost:8080/coupon/a49bbc62-2084-4ea3-9ec0-2965465b2415'
+```
+
 ## Erros e Validação
 - `400 Bad Request`: validações de entrada, código inválido, desconto menor que 0.5, ID malformatado
-- `404 Not Found`: cupom não encontrado
-- `409 Conflict`: conflitos de negócio (ex.: código já existente)
-- `500 Internal Server Error`: erros não mapeados
+  - `404 Not Found`: cupom não encontrado
+  - `409 Conflict`: conflitos de negócio (ex.: código já existente)
+  - `500 Internal Server Error`: erros não mapeados
 
 O corpo do erro segue `ProblemDetail`:
 ```json
@@ -99,7 +124,7 @@ docker run --rm -p 8080:8080 washington1995luiz/coupon:590c
 
 Após subir:
 - API: `http://localhost:8080`
-- H2 Console: `http://localhost:8080/h2-console`
+  - H2 Console: `http://localhost:8080/h2-console`
 
 ## Configuração (application.yaml)
 ```yaml

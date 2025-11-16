@@ -34,7 +34,7 @@ public class CouponControllerTest {
     private CouponService couponService;
 
     @Test
-    public void shouldCreateCoupon_andReturnStatusCreated() throws Exception {
+    public void shouldCreateCouponAndReturnStatusCreated() throws Exception {
         var request = CouponCreateRequestMock.buildGoodValues();
         var coupon = Coupon.create(request.code(), request.description(), request.discountValue(), request.expirationDate(), request.published());
         when(couponService.create(any())).thenReturn(coupon);
@@ -45,7 +45,7 @@ public class CouponControllerTest {
     }
 
     @Test
-    public void shouldCreateCoupon_andReturnStatusCreated_whenCodeContainsSpecialCharacters() throws Exception {
+    public void shouldCreateCouponAndReturnStatusCreated_whenCodeContainsSpecialCharacters() throws Exception {
         var request = CouponCreateRequestMock.buildGoodValuesCodeSpecialCharacters();
         var coupon = Coupon.create(request.code(), request.description(), request.discountValue(), request.expirationDate(), request.published());
         when(couponService.create(any())).thenReturn(coupon);
@@ -56,7 +56,7 @@ public class CouponControllerTest {
     }
 
     @Test
-    public void shouldNotCreateCoupon_andReturnStatusBadRequest_whenCodeWithSpecialCharactersIsGreaterThanSix() throws Exception {
+    public void shouldNotCreateCouponAndReturnStatusBadRequest_whenCodeWithSpecialCharactersIsGreaterThanSix() throws Exception {
         var request = CouponCreateRequestMock.buildBadValuesCodeSpecialCharacters();
         when(couponService.create(any())).thenThrow(new CodeLengthException("Coupon code must contain exactly 6 alphanumeric characters"));
         mockMvc.perform(post("/coupon")
@@ -66,7 +66,7 @@ public class CouponControllerTest {
     }
 
     @Test
-    public void shouldNotCreateCoupon_andReturnStatusBadRequest_whenCodeIsLessThanSix() throws Exception {
+    public void shouldNotCreateCouponAndReturnStatusBadRequest_whenCodeIsLessThanSix() throws Exception {
         var request = CouponCreateRequestMock.buildBadValuesCodeSizeLessThanSix();
         when(couponService.create(any())).thenThrow(new CodeLengthException("Coupon code must contain exactly 6 alphanumeric characters"));
         mockMvc.perform(post("/coupon")
@@ -76,7 +76,7 @@ public class CouponControllerTest {
     }
 
     @Test
-    public void shouldNotCreateCoupon_andReturnStatusBadRequest_whenCodeIsGraterThanSix() throws Exception {
+    public void shouldNotCreateCouponAndReturnStatusBadRequest_whenCodeIsGraterThanSix() throws Exception {
         var request = CouponCreateRequestMock.buildBadValuesCodeSizeGreaterThanSix();
         when(couponService.create(any())).thenThrow(new CodeLengthException("Coupon code must contain exactly 6 alphanumeric characters"));
         mockMvc.perform(post("/coupon")
@@ -87,7 +87,7 @@ public class CouponControllerTest {
 
 
     @Test
-    public void shouldNotCreateCoupon_andReturnBadRequest_whenDiscountValueIsLessThanZeroPointFive() throws Exception {
+    public void shouldNotCreateCouponAndReturnBadRequest_whenDiscountValueIsLessThanZeroPointFive() throws Exception {
         var request = CouponCreateRequestMock.buildBadValuesDiscountValue();
         when(couponService.create(any())).thenThrow(new DiscountValueException("Discount value must be greater than or equal to 0.5"));
         mockMvc.perform(post("/coupon")

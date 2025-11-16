@@ -48,4 +48,14 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleCodeNullException(CodeNullException ex) {
         return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
     }
+
+    @ExceptionHandler(InvalidExpirationException.class)
+    public ProblemDetail handleInvalidExpirationException(InvalidExpirationException ex) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
+
+    @ExceptionHandler(CouponAlreadyDeletedException.class)
+    public ProblemDetail handleCouponAlreadyDeletedException(CouponAlreadyDeletedException ex) {
+        return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+    }
 }

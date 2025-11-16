@@ -1,6 +1,8 @@
 package br.com.washington.coupon.model;
 
+import br.com.washington.coupon.exception.CouponAlreadyDeletedException;
 import br.com.washington.coupon.exception.DiscountValueException;
+import br.com.washington.coupon.exception.InvalidExpirationException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
 import lombok.Getter;
@@ -32,6 +34,7 @@ public class Coupon {
     @Column(name = "expiration_date", nullable = false)
     private LocalDateTime expirationDate;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private Status status;
 
@@ -57,6 +60,9 @@ public class Coupon {
         if (discountValue.compareTo(MIN_DISCOUNT) < 0) {
             throw new DiscountValueException("Discount value must be greater than or equal to " + MIN_DISCOUNT);
         }
+        if (expirationDate.isBefore(LocalDateTime.now())) {
+            throw new InvalidExpirationException("Expiration date must be in the future");
+        }
 
         var now = LocalDateTime.now();
 
@@ -66,7 +72,7 @@ public class Coupon {
         coupon.discountValue = discountValue;
         coupon.expirationDate = expirationDate;
         coupon.status = Status.ACTIVE;
-        coupon.published = published != null && published;
+        coupon.published = Boolean.TRUE.equals(published);
         coupon.redeemed = false;
         coupon.createdAt = now;
         coupon.updatedAt = now;
@@ -74,6 +80,9 @@ public class Coupon {
     }
 
     public void softDelete() {
+        if (this.status == Status.DELETED) {
+            throw new CouponAlreadyDeletedException("Coupon is already deleted");
+        }
         var now = LocalDateTime.now();
         this.status = Status.DELETED;
         this.updatedAt = now;

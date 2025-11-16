@@ -26,9 +26,6 @@ public class CouponController {
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
     public CouponResponse createCoupon(@RequestBody @Valid CouponCreateRequest request) {
-        if (request.discountValue().compareTo(new BigDecimal("0.5")) < 0) {
-            throw new DiscountValueException("Discount value must be greater than or equal to 0.5");
-        }
         Coupon coupon = couponService.create(request);
         return CouponResponse.fromModel(coupon);
     }
